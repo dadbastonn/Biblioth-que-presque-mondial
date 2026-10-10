@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bibliothèque personnelle</title>
+    <style>
+      :root {
+        --bg: #f3f6fb;
+        --card: #ffffff;
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary: #0ea5e9;
+        --success: #10b981;
+        --danger: #ef4444;
+        --text: #0f172a;
+        --muted: #64748b;
+        --border: #dbe3ee;
+      }
+
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      body {
+        padding: 24px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .hidden { display: none !important; }
+
+      .topbar {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      }
+
+      .brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+
+      .topbar-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      button, .btn-link {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover { background: var(--primary-dark); }
+
+      .btn-success {
+        background: var(--success);
+        color: white;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #e0f2fe;
+        color: #075985;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .stat-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      }
+
+      .stat-card .label {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .stat-card .value {
+        margin-top: 8px;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .toolbar-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: 2.5fr 1fr;
+        gap: 20px;
+      }
+
+      .panel {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      }
+
+      .panel h3 {
+        margin-top: 0;
+        margin-bottom: 18px;
+      }
+
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+      }
+
+      .item-card {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #f8fbff;
+        padding: 18px 14px;
+        cursor: pointer;
+        min-height: 142px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .item-card:hover {
+        border-color: #93c5fd;
+      }
+
+      .item-icon {
+        font-size: 2rem;
+      }
+
+      .item-title {
+        font-weight: 700;
+        word-break: break-word;
+      }
+
+      .item-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .file-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .link-btn {
+        color: var(--primary);
+        background: transparent;
+        padding: 0;
+        font-weight: 600;
+      }
+
+      .side-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .auth-box {
+        max-width: 420px;
+        margin: 30px auto;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      }
+
+      .auth-box h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .input, select {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 1rem;
+      }
+
+      .input:focus, select:focus {
+        outline: 2px solid rgba(37, 99, 235, 0.2);
+        border-color: var(--primary);
+      }
+
+      .toggle-link {
+        margin-top: 16px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .toggle-link button {
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .alert {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 12px;
+      }
+
+      .success {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+
+      .history-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .history-item {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #f8fafc;
+      }
+
+      .history-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .empty-state {
+        color: var(--muted);
+        padding: 14px 0;
+      }
+
+      @media (max-width: 900px) {
+        .dashboard { grid-template-columns: 1fr; }
+        .stats { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      const STORAGE_KEYS = {
+        users: 'library_users',
+        session: 'library_session',
+        library: 'library_data',
+        history: 'library_history',
+        devices: 'library_devices'
+      };
+
+      const defaultLibrary = {
+        folders: [],
+        files: []
+      };
+
+      const deviceInfo = {
+        name: navigator.userAgent || 'Navigateur inconnu',
+        platform: navigator.platform || 'Inconnu'
+      };
+
+      function uid(prefix = 'id') {
+        return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2, 9)}`;
+      }
+
+      function getStored(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function saveStored(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function getCurrentUser() {
+        return getStored(STORAGE_KEYS.session, null);
+      }
+
+      function saveCurrentUser(user) {
+        saveStored(STORAGE_KEYS.session, user);
+      }
+
+      function getUsers() {
+        return getStored(STORAGE_KEYS.users, []);
+      }
+
+      function saveUsers(users) {
+        saveStored(STORAGE_KEYS.users, users);
+      }
+
+      function getLibrary() {
+        return getStored(STORAGE_KEYS.library, defaultLibrary);
+      }
+
+      function saveLibrary(data) {
+        saveStored(STORAGE_KEYS.library, data);
+      }
+
+      function getHistory() {
+        return getStored(STORAGE_KEYS.history, []);
+      }
+
+      function saveHistory(history) {
+        saveStored(STORAGE_KEYS.history, history);
+      }
+
+      function addHistory(actionType, description, targetType = null, targetId = null) {
+        const history = getHistory();
+        history.unshift({
+          id: uid('history'),
+          actionType,
+          description,
+          targetType,
+          targetId,
+          date: new Date().toISOString()
+        });
+        saveHistory(history.slice(0, 100));
+      }
+
+      function getUserLibrary() {
+        const user = getCurrentUser();
+        const data = getLibrary();
+
+        return {
+          folders: data.folders.filter(folder => folder.userId === user?.id),
+          files: data.files.filter(file => file.userId === user?.id)
+        };
+      }
+
+      function registerDevice(userId) {
+        const devices = getStored(STORAGE_KEYS.devices, []);
+        const existing = devices.find(device => device.userId === userId && device.name === deviceInfo.name);
+
+        if (!existing) {
+          devices.push({
+            id: uid('device'),
+            userId,
+            name: deviceInfo.name,
+            platform: deviceInfo.platform,
+            lastSeen: new Date().toISOString()
+          });
+          saveStored(STORAGE_KEYS.devices, devices);
+        }
+      }
+
+      function getUserDevices(userId) {
+        const devices = getStored(STORAGE_KEYS.devices, []);
+        return devices.filter(device => device.userId === userId);
+      }
+
+      function normalizeUser(user) {
+        return {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          password: user.password
+        };
+      }
+
+      function renderAuthView() {
+        const app = document.getElementById('app');
+        app.innerHTML = `
+          <div class="auth-box">
+            <h2 id="authTitle">Se connecter</h2>
+            <div id="authAlert" class="alert hidden"></div>
+            <div id="loginForm">
+              <div class="form-grid">
+                <input id="loginEmail" class="input" type="email" placeholder="Adresse email" />
+                <input id="loginPassword" class="input" type="password" placeholder="Mot de passe" />
+                <button class="btn-primary" id="loginBtn">Connexion</button>
+              </div>
+            </div>
+
+            <div id="registerForm" class="hidden">
+              <div class="form-grid">
+                <input id="regFirstname" class="input" type="text" placeholder="Prénom" />
+                <input id="regLastname" class="input" type="text" placeholder="Nom" />
+                <input id="regEmail" class="input" type="email" placeholder="Email" />
+                <input id="regPassword" class="input" type="password" placeholder="Mot de passe" />
+                <button class="btn-success" id="registerBtn">Créer un compte</button>
+              </div>
+            </div>
+
+            <div class="toggle-link">
+              <span id="switchText">Pas encore de compte ?</span>
+              <button id="switchModeBtn">Créer un compte</button>
+            </div>
+          </div>
+        `;
+
+        const switchModeBtn = document.getElementById('switchModeBtn');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authTitle = document.getElementById('authTitle');
+        const switchText = document.getElementById('switchText');
+
+        let isRegister = false;
+
+        const updateMode = () => {
+          loginForm.classList.toggle('hidden', isRegister);
+          registerForm.classList.toggle('hidden', !isRegister);
+          authTitle.textContent = isRegister ? 'Créer un compte' : 'Se connecter';
+          switchText.textContent = isRegister ? 'Déjà inscrit ?' : 'Pas encore de compte ?';
+          switchModeBtn.textContent = isRegister ? 'Connexion' : 'Créer un compte';
+        };
+
+        switchModeBtn.addEventListener('click', () => {
+          isRegister = !isRegister;
+          updateMode();
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          const email = document.getElementById('loginEmail').value.trim();
+          const password = document.getElementById('loginPassword').value;
+          const users = getUsers();
+          const user = users.find(u => u.email === email && u.password === password);
+          const alertBox = document.getElementById('authAlert');
+
+          if (!user) {
+            alertBox.classList.remove('hidden');
+            alertBox.textContent = 'Email ou mot de passe incorrect.';
+            return;
+          }
+
+          alertBox.classList.add('hidden');
+          const safeUser = normalizeUser(user);
+          saveCurrentUser(safeUser);
+          registerDevice(safeUser.id);
+          addHistory('login', `Connexion depuis ${deviceInfo.name}`);
+          renderApp();
+        });
+
+        document.getElementById('registerBtn').addEventListener('click', () => {
+          const firstname = document.getElementById('regFirstname').value.trim();
+          const lastname = document.getElementById('regLastname').value.trim();
+          const email = document.getElementById('regEmail').value.trim();
+          const password = document.getElementById('regPassword').value;
+          const alertBox = document.getElementById('authAlert');
+
+          if (!firstname || !lastname || !email || !password) {
+            alertBox.classList.remove('hidden');
+            alertBox.textContent = 'Tous les champs sont obligatoires.';
+            return;
+          }
+
+          const users = getUsers();
+          if (users.some(user => user.email === email)) {
+            alertBox.classList.remove('hidden');
+            alertBox.textContent = 'Un compte existe déjà pour cet email.';
+            return;
+          }
+
+          const newUser = {
+            id: uid('user'),
+            firstname,
+            lastname,
+            email,
+            password
+          };
+
+          users.push(newUser);
+          saveUsers(users);
+          alertBox.classList.remove('hidden');
+          alertBox.classList.add('success');
+          alertBox.textContent = 'Compte créé avec succès. Vous pouvez maintenant vous connecter.';
+          document.getElementById('regFirstname').value = '';
+          document.getElementById('regLastname').value = '';
+          document.getElementById('regEmail').value = '';
+          document.getElementById('regPassword').value = '';
+          isRegister = false;
+          updateMode();
+          alertBox.classList.remove('success');
+        });
+
+        updateMode();
+      }
+
+      function renderApp() {
+        const user = getCurrentUser();
+        if (!user) {
+          renderAuthView();
+          return;
+        }
+
+        const library = getUserLibrary();
+        const devices = getUserDevices(user.id);
+        const app = document.getElementById('app');
+
+        const totalFilesSize = library.files.reduce((sum, file) => sum + Number(file.size || 0), 0);
+
+        app.innerHTML = `
+          <div class="container">
+            <div class="topbar">
+              <div>
+                <div class="brand">Bibliothèque</div>
+                <div style="color:#64748b; margin-top: 2px;">${user.firstname} ${user.lastname}</div>
+              </div>
+              <div class="topbar-actions">
+                <button class="btn-secondary" id="historyBtn">Historique</button>
+                <button class="btn-danger" id="logoutBtn">Déconnexion</button>
+              </div>
+            </div>
+
+            <div class="stats">
+              <div class="stat-card">
+                <div class="label">Fichiers</div>
+                <div class="value">${library.files.length}</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Dossiers</div>
+                <div class="value">${library.folders.length}</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Espace</div>
+                <div class="value">${(totalFilesSize / 1024 / 1024).toFixed(2)} MB</div>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <div class="toolbar-group">
+                <button class="btn-primary" id="newFolderBtn">+ Créer un dossier</button>
+                <label class="btn-success" style="display:inline-block; cursor:pointer;">
+                  + Importer un fichier
+                  <input id="fileInput" type="file" class="hidden" />
+                </label>
+              </div>
+            </div>
+
+            <div class="dashboard">
+              <div class="panel">
+                <h3>Contenu</h3>
+                <div id="itemsGrid" class="items-grid"></div>
+              </div>
+
+              <div class="side-panel">
+                <div class="panel">
+                  <h3>Appareils reconnus</h3>
+                  <div>
+                    ${devices.length ? devices.map(d => `
+                      <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+                        <strong>${d.name}</strong><br>
+                        <small>${d.platform}</small>
+                      </div>
+                    `).join('') : '<div class="empty-state">Aucun appareil enregistré.</div>'}
+                  </div>
+                </div>
+
+                <div class="panel">
+                  <h3>Historique récent</h3>
+                  <div class="history-list">
+                    ${getHistory().slice(0, 8).map(item => `
+                      <div class="history-item">
+                        <strong>${item.actionType}</strong>
+                        <div>${item.description}</div>
+                        <small>${new Date(item.date).toLocaleString()}</small>
+                      </div>
+                    `).join('') || '<div class="empty-state">Aucune activité pour le moment.</div>'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        renderItems(library);
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem(STORAGE_KEYS.session);
+          renderAuthView();
+        });
+
+        document.getElementById('historyBtn').addEventListener('click', () => {
+          alert('Historique consultable depuis le panneau de droite.');
+        });
+
+        document.getElementById('newFolderBtn').addEventListener('click', () => {
+          const name = prompt('Nom du dossier :');
+          if (!name || !name.trim()) return;
+          const data = getLibrary();
+          data.folders.push({
+            id: uid('folder'),
+            userId: user.id,
+            name: name.trim(),
+            createdAt: new Date().toISOString()
+          });
+          saveLibrary(data);
+          addHistory('folder_create', `Dossier créé : ${name.trim()}`,'folder', null);
+          renderApp();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', async (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            const data = getLibrary();
+            data.files.push({
+              id: uid('file'),
+              userId: user.id,
+              name: file.name,
+              size: file.size,
+              type: file.type || 'inconnu',
+              dataUrl: reader.result,
+              uploadedAt: new Date().toISOString()
+            });
+            saveLibrary(data);
+            addHistory('file_upload', `Fichier importé : ${file.name}`, 'file', null);
+            renderApp();
+          };
+
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderItems(library) {
+        const grid = document.getElementById('itemsGrid');
+        const items = [
+          ...library.folders.map(folder => ({
+            type: 'folder',
+            id: folder.id,
+            title: folder.name,
+            date: folder.createdAt,
+            data: folder
+          })),
+          ...library.files.map(file => ({
+            type: 'file',
+            id: file.id,
+            title: file.name,
+            date: file.uploadedAt,
+            size: file.size,
+            data: file
+          }))
+        ];
+
+        if (!items.length) {
+          grid.innerHTML = '<div class="empty-state">Aucun fichier ni dossier pour le moment.</div>';
+          return;
+        }
+
+        grid.innerHTML = items.map(item => {
+          const isFolder = item.type === 'folder';
+          return `
+            <div class="item-card" data-id="${item.id}" data-type="${item.type}">
+              <div>
+                <div class="item-icon">${isFolder ? '📁' : '📄'}</div>
+                <div class="item-title">${item.title}</div>
+              </div>
+              <div>
+                <div class="item-meta">${new Date(item.date).toLocaleDateString()}</div>
+                ${!isFolder ? `<div class="item-meta">${(item.size / 1024).toFixed(2)} KB</div>` : ''}
+                <div class="file-actions">
+                  ${isFolder ? '<button class="link-btn" data-open-folder="'+item.id+'">Ouvrir</button>' : '<a class="link-btn" href="'+(item.data.dataUrl || '#')+'" target="_blank" rel="noreferrer">Télécharger</a>'}
+                  <button class="link-btn" style="color:#ef4444;" data-delete-item="${item.id}" data-type="${item.type}">Supprimer</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.querySelectorAll('[data-open-folder]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            alert('Ouverture du dossier : fonctionnalité de démonstration.
+Pour une version avancée, il faut un système de hiérarchie complet.');
+          });
+        });
+
+        document.querySelectorAll('[data-delete-item]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-delete-item');
+            const type = btn.getAttribute('data-type');
+            const data = getLibrary();
+            if (type === 'file') {
+              data.files = data.files.filter(file => file.id !== id);
+              addHistory('file_delete', 'Fichier supprimé');
+            } else {
+              data.folders = data.folders.filter(folder => folder.id !== id);
+              addHistory('folder_delete', 'Dossier supprimé');
+            }
+            saveLibrary(data);
+            renderApp();
+          });
+        });
+      }
+
+      function boot() {
+        const current = getCurrentUser();
+        if (current) {
+          renderApp();
+        } else {
+          renderAuthView();
+        }
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
