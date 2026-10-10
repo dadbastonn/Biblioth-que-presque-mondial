@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: bibliotheque-db
+    environment:
+      POSTGRES_USER: bibliotheque
+      POSTGRES_PASSWORD: securepassword123
+      POSTGRES_DB: bibliotheque
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  backend:
+    build: ./backend
+    container_name: bibliotheque-api
+    environment:
+      DATABASE_URL: postgresql://bibliotheque:securepassword123@postgres:5432/bibliotheque
+      JWT_SECRET: your-secret-key-change-this
+      PORT: 5000
+      NODE_ENV: development
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: bibliotheque-web
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: bibliotheque-network

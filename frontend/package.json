@@ -1,0 +1,21 @@
+{
+  "name": "bibliotheque-frontend",
+  "version": "1.0.0",
+  "description": "Frontend React pour plateforme de bibliothèque",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0",
+    "axios": "^1.4.0",
+    "redux": "^4.2.1",
+    "react-redux": "^8.1.1",
+    "@reduxjs/toolkit": "^1.9.5",
+    "tailwindcss": "^3.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "dev": "react-scripts start"
+  }
+}
